@@ -22,25 +22,22 @@
          <font>
             <Font size="18.0" />
          </font></Label>
-      <ImageView fx:id="piedra" fitHeight="188.0" fitWidth="138.0" layoutX="44.0" layoutY="146.0" onMouseClicked="#piedra" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="ImageOne" fitHeight="188.0" fitWidth="138.0" layoutX="44.0" layoutY="146.0" onMouseClicked="#piedra" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/piedra.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <ImageView fx:id="papel" fitHeight="188.0" fitWidth="138.0" layoutX="234.0" layoutY="146.0" onMouseClicked="#papel" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="ImageTwo" fitHeight="188.0" fitWidth="138.0" layoutX="234.0" layoutY="146.0" onMouseClicked="#papel" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/papel.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <ImageView fx:id="tijera" fitHeight="188.0" fitWidth="138.0" layoutX="423.0" layoutY="146.0" onMouseClicked="#tijera" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="ImageThree" fitHeight="188.0" fitWidth="138.0" layoutX="423.0" layoutY="146.0" onMouseClicked="#tijera" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/tijera.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />

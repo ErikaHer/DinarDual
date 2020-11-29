@@ -8,12 +8,14 @@ package controller;
 import classes.client;
 import classes.server;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
@@ -21,6 +23,11 @@ import javafx.scene.image.ImageView;
  * @author heber
  */
 public class FXMLDocumentController implements Initializable {
+    
+    String values[];
+    ImageView imageView[];
+    int roundValues[];
+    Random random;
     
     server sv = new server(this);
     client cl = new client(this);
@@ -44,16 +51,24 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button player2;
     @FXML
-    private ImageView piedra;
+    private ImageView ImageOne;
     @FXML
-    private ImageView papel;
+    private ImageView ImageTwo;
     @FXML
-    private ImageView tijera;
+    private ImageView ImageThree;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        values = new String[10];
+        imageView = new ImageView[3];
+        roundValues = new int[3];
+        
         buttonsOff();
+        fillArray();
+        
+        random = new Random();
+        getCardsValues();
     }
     
     public void runClient() {
@@ -94,6 +109,50 @@ public class FXMLDocumentController implements Initializable {
         comprobar();
     }
     
+    //Asigna las cartas a cada imageView
+    public void getCardsValues(){
+        int number;
+        Image image;
+        for(int i=0; i<3; i++){
+            number = random.nextInt(10);
+            if(isAvailable(number, i)){
+                image = new Image("/images/" + values[number] + ".png", true);
+                imageView[i].setImage(image);
+                saveValue(number, i);
+            }
+            else{
+                i--;
+            }
+        }
+    }
+    
+    //Verifica que la carta no se repita
+    public boolean isAvailable(int number, int i){
+        boolean available = true;
+        //ignora la primer asignación
+        if(i != 0){
+            switch(i){
+                case 1:
+                    //verifica si es el mismo valor que la carta 1
+                    if(roundValues[0] == number)
+                        available = false;
+                break;
+                case 2:
+                    //verifica si es el mismo valor que la carta 1 o la carta 2
+                    if(roundValues[0] == number || roundValues[1] == number)
+                        available = false;
+                break;
+            }
+        }
+        
+        return available;
+    }
+    
+    //Guarda los valores que se van asignando
+    public void saveValue(int cardValue, int pos){
+        roundValues[pos] = cardValue;
+    }
+    
     public void piedra(){
         tuMovimiento = "piedra";
         sendMSG("piedra");
@@ -110,15 +169,15 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void buttonsOff(){
-        piedra.setDisable(true);
-        papel.setDisable(true);
-        tijera.setDisable(true);
+        ImageOne.setDisable(true);
+        ImageTwo.setDisable(true);
+        ImageThree.setDisable(true);
     }
     
     public void buttonsOn(){
-        piedra.setDisable(false);
-        papel.setDisable(false);
-        tijera.setDisable(false);
+        ImageOne.setDisable(false);
+        ImageTwo.setDisable(false);
+        ImageThree.setDisable(false);
     }
     
     public void comprobar(){
@@ -190,5 +249,22 @@ public class FXMLDocumentController implements Initializable {
             turno = 2;
         }
         comprobar();
+    }
+    
+    public void fillArray(){
+        values[0] = "1-Oro";
+        values[1] = "2-Oro";
+        values[2] = "3-Oro";
+        values[3] = "4-Oro";
+        values[4] = "5-Oro";
+        values[5] = "6-Oro";
+        values[6] = "7-Oro";
+        values[7] = "10-Oro";
+        values[8] = "11-Oro";
+        values[9] = "12-Oro";
+        
+        imageView[0] = ImageOne;
+        imageView[1] = ImageTwo;
+        imageView[2] = ImageThree;
     }
 }

@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 /**
  *
@@ -51,11 +52,12 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button player2;
     @FXML
-    private ImageView ImageOne;
+    private ImageView image_1;
     @FXML
-    private ImageView ImageTwo;
+    private ImageView image_2;
     @FXML
-    private ImageView ImageThree;
+    private ImageView image_3;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -111,14 +113,16 @@ public class FXMLDocumentController implements Initializable {
     
     //Asigna las cartas a cada imageView
     public void getCardsValues(){
-        int number;
+        int number,value;
         Image image;
         for(int i=0; i<3; i++){
             number = random.nextInt(10);
             if(isAvailable(number, i)){
                 image = new Image("/images/" + values[number] + ".png", true);
                 imageView[i].setImage(image);
-                saveValue(number, i);
+                //saveValue(number, i);
+                value = Integer.parseInt(values[number].split("-")[0]);
+                saveValue(value,i);
             }
             else{
                 i--;
@@ -152,50 +156,40 @@ public class FXMLDocumentController implements Initializable {
     public void saveValue(int cardValue, int pos){
         roundValues[pos] = cardValue;
     }
-    
-    public void piedra(){
-        tuMovimiento = "piedra";
-        sendMSG("piedra");
-    }
-    
-    public void papel(){
-        tuMovimiento = "papel";
-        sendMSG("papel");
-    }
-    
-    public void tijera(){
-        tuMovimiento = "tijera";
-        sendMSG("tijera");
+
+    @FXML
+    public void onCardClick(MouseEvent event){
+        ImageView clickedImageView = (ImageView) event.getSource();
+        int clickedImage = Integer.parseInt(clickedImageView.getId().split("_")[1]);
+        int cardValue = roundValues[clickedImage-1];
+        tuMovimiento = cardValue + " de Oro";
+        sendMSG(tuMovimiento);
     }
     
     public void buttonsOff(){
-        ImageOne.setDisable(true);
-        ImageTwo.setDisable(true);
-        ImageThree.setDisable(true);
+        image_1.setDisable(true);
+        image_2.setDisable(true);
+        image_3.setDisable(true);
     }
     
     public void buttonsOn(){
-        ImageOne.setDisable(false);
-        ImageTwo.setDisable(false);
-        ImageThree.setDisable(false);
+        image_1.setDisable(false);
+        image_2.setDisable(false);
+        image_3.setDisable(false);
     }
     
     public void comprobar(){
         System.out.println(tuMovimiento +"---"+ movimientoRival);
         if(!movimientoRival.equals("") && !tuMovimiento.equals("")){
-            if(tuMovimiento.equals("piedra") && movimientoRival.equals("tijera")){
+            int ownMove, rivalMove;
+            ownMove = Integer.parseInt(tuMovimiento.split(" ")[0]);
+            rivalMove = Integer.parseInt(movimientoRival.split(" ")[0]);
+            
+            if(ownMove > rivalMove){
                 win();
-            } else if(tuMovimiento.equals("piedra") && movimientoRival.equals("papel")){
+            } else if(ownMove < rivalMove){
                 lose();
-            } else if(tuMovimiento.equals("papel") && movimientoRival.equals("piedra")){
-                win();
-            } else if(tuMovimiento.equals("papel") && movimientoRival.equals("tijera")){
-                lose();
-            } else if(tuMovimiento.equals("tijera") && movimientoRival.equals("papel")){
-                win();
-            } else if(tuMovimiento.equals("tijera") && movimientoRival.equals("piedra")){
-                lose();
-            } else if(tuMovimiento.equals(movimientoRival)){
+            } else {
                 empate();
             }
         }
@@ -263,8 +257,8 @@ public class FXMLDocumentController implements Initializable {
         values[8] = "11-Oro";
         values[9] = "12-Oro";
         
-        imageView[0] = ImageOne;
-        imageView[1] = ImageTwo;
-        imageView[2] = ImageThree;
+        imageView[0] = image_1;
+        imageView[1] = image_2;
+        imageView[2] = image_3;
     }
 }

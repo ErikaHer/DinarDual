@@ -54,6 +54,10 @@ public class client extends Thread{
         } catch (IOException ex) {
             Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        if(socket.isConnected()){
+            iniciar();
+        }
     }
     
     public void enviarMensaje(String mensaje){
@@ -74,6 +78,18 @@ public class client extends Thread{
             Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "";
+    }
+    
+    public void iniciar(){
+        boolean serverComplete = false;
+        String msg = recibirMensaje();
+        while(!serverComplete){
+            if(!msg.equals("")){
+                controller.addMSG(msg);
+                controller.getCardsValues();
+                serverComplete = true;
+            }
+        }
     }
     
     @Override

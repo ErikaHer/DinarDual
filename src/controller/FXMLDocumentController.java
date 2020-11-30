@@ -29,11 +29,12 @@ public class FXMLDocumentController implements Initializable {
     ImageView imageView[];
     int roundValues[];
     Random random;
+    String clientCardAvailable[];
     
     server sv = new server(this);
     client cl = new client(this);
     int rol;
-    int turno = 1;
+    int turno = 0;
     int scorep1 = 0;
     int scorep2 = 0;
     String movimientoRival = "";
@@ -70,7 +71,6 @@ public class FXMLDocumentController implements Initializable {
         fillArray();
         
         random = new Random();
-        getCardsValues();
     }
     
     public void runClient() {
@@ -89,6 +89,7 @@ public class FXMLDocumentController implements Initializable {
     public void runServer() {
         buttonsOn();
         rol = 1;
+        turno = 1;
         score1.setText("score jugador 1:");
         score2.setText("score jugador 2:");
         player1.setDisable(true);
@@ -117,24 +118,39 @@ public class FXMLDocumentController implements Initializable {
         Image image;
         for(int i=0; i<3; i++){
             number = random.nextInt(10);
-            if(isAvailable(number, i)){
+            value = Integer.parseInt(values[number].split("-")[0]);
+            System.out.println(isAvailable(value, i) + "-number: "+ value);
+            if(isAvailable(value, i)){
                 image = new Image("/images/" + values[number] + ".png", true);
                 imageView[i].setImage(image);
                 //saveValue(number, i);
-                value = Integer.parseInt(values[number].split("-")[0]);
                 saveValue(value,i);
             }
             else{
                 i--;
             }
         }
+        if(rol == 1){
+            sv.enviarMensaje(""+roundValues[0]+"-"+roundValues[1]+"-"+roundValues[2]);
+        }
+    }
+   
+    public void addNotAvailable(String mensaje){
+        System.out.println(mensaje);
     }
     
     //Verifica que la carta no se repita
     public boolean isAvailable(int number, int i){
         boolean available = true;
+        boolean cardsAvailable = true;
         //ignora la primer asignación
-        if(i != 0){
+        if(rol==2){
+            if(clientCardAvailable[0].equals(""+number) || clientCardAvailable[1].equals(""+number) || clientCardAvailable[2].equals(""+number)){
+                available = false;
+                cardsAvailable = false;
+            }
+        }
+        if(i != 0 && cardsAvailable){
             switch(i){
                 case 1:
                     //verifica si es el mismo valor que la carta 1
@@ -179,7 +195,6 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void comprobar(){
-        System.out.println(tuMovimiento +"---"+ movimientoRival);
         if(!movimientoRival.equals("") && !tuMovimiento.equals("")){
             int ownMove, rivalMove;
             ownMove = Integer.parseInt(tuMovimiento.split(" ")[0]);
@@ -238,11 +253,14 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void addMSG(String mensaje){
-        if(turno == 1) {
+        if(turno == 0){
+            clientCardAvailable = mensaje.split("-");
+            turno = 1;
+        } else if(turno == 1) {
             movimientoRival = mensaje;
             turno = 2;
+            comprobar();
         }
-        comprobar();
     }
     
     public void fillArray(){

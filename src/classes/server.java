@@ -64,6 +64,9 @@ public class server extends Thread{
         } catch (IOException ex) {
             Logger.getLogger(server.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if(socket.isConnected()){
+            iniciar();
+        }
     }
     
     public void enviarMensaje(String mensaje){
@@ -84,6 +87,10 @@ public class server extends Thread{
             Logger.getLogger(server.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "";
+    }
+    
+    public void iniciar(){
+        controller.getCardsValues();
     }
     
     @Override

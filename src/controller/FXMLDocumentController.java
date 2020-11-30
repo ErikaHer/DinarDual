@@ -21,7 +21,7 @@ import javafx.scene.input.MouseEvent;
 
 /**
  *
- * @author heber
+ * @author ESUMA 
  */
 public class FXMLDocumentController implements Initializable {
     
@@ -59,13 +59,19 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ImageView image_3;
     
-    
+    private ImageView clickedImageView;
+    private boolean[] usedImages;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         values = new String[10];
         imageView = new ImageView[3];
         roundValues = new int[3];
+        usedImages = new boolean[3];
+        for(int i=0;i<usedImages.length;i++){
+            usedImages[i] = false;
+        }
         
         buttonsOff();
         fillArray();
@@ -74,7 +80,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void runClient() {
-        buttonsOn();
+        buttonsOn(false);
         rol = 2;
         score1.setText("score jugador 1:");
         score2.setText("score jugador 2:");
@@ -87,7 +93,7 @@ public class FXMLDocumentController implements Initializable {
         cl.start();
     }
     public void runServer() {
-        buttonsOn();
+        buttonsOn(false);
         rol = 1;
         turno = 1;
         score1.setText("score jugador 1:");
@@ -124,6 +130,7 @@ public class FXMLDocumentController implements Initializable {
                 image = new Image("/images/" + values[number] + ".png", true);
                 imageView[i].setImage(image);
                 //saveValue(number, i);
+                value = Integer.parseInt(values[number].split("-")[0]);
                 saveValue(value,i);
             }
             else{
@@ -131,7 +138,7 @@ public class FXMLDocumentController implements Initializable {
             }
         }
         if(rol == 1){
-            sv.enviarMensaje(""+roundValues[0]+"-"+roundValues[1]+"-"+roundValues[2]);
+            sv.enviarMensaje(roundValues[0]+"-"+roundValues[1]+"-"+roundValues[2]);
         }
     }
    
@@ -175,10 +182,28 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public void onCardClick(MouseEvent event){
-        ImageView clickedImageView = (ImageView) event.getSource();
+        clickedImageView = (ImageView) event.getSource();
         int clickedImage = Integer.parseInt(clickedImageView.getId().split("_")[1]);
         int cardValue = roundValues[clickedImage-1];
         tuMovimiento = cardValue + " de Oro";
+
+        clickedImageView = (ImageView) event.getSource();
+        String currentImageView = clickedImageView.getId();
+        tuMovimiento = cardValue + " de Oro";
+                
+        switch(currentImageView){
+            case "image_1":
+                usedImages[0] = true;
+            break;
+                
+            case "image_2":
+                usedImages[1] = true;
+            break;
+             
+            case "image_3":
+                usedImages[2] = true;
+            break;
+        }
         sendMSG(tuMovimiento);
     }
     
@@ -188,10 +213,36 @@ public class FXMLDocumentController implements Initializable {
         image_3.setDisable(true);
     }
     
-    public void buttonsOn(){
-        image_1.setDisable(false);
-        image_2.setDisable(false);
-        image_3.setDisable(false);
+    public void buttonsOn(boolean won){
+        if(!usedImages[0]){
+            image_1.setDisable(false);
+        } else {
+            if(won){
+             image_1.setImage(new Image("/images/round_won.png"));   
+            } else {
+                image_1.setImage(new Image("/images/round_lost.png"));  
+            }
+        }
+        
+        if(!usedImages[1]){
+            image_2.setDisable(false);
+        } else {
+            if(won){
+             image_2.setImage(new Image("/images/round_won.png"));   
+            } else {
+                image_2.setImage(new Image("/images/round_lost.png"));  
+            }
+        }
+        
+        if(!usedImages[2]){
+            image_3.setDisable(false);
+        } else {
+            if(won){
+             image_3.setImage(new Image("/images/round_won.png"));   
+            } else {
+                image_3.setImage(new Image("/images/round_lost.png"));  
+            }
+        }
     }
     
     public void comprobar(){
@@ -211,6 +262,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void win(){
+        boolean won = true;
         aviso.setText("¡Ganaste! El rival eligió " + movimientoRival);
         if(rol == 1){
         scorep1+=1;
@@ -222,10 +274,11 @@ public class FXMLDocumentController implements Initializable {
         tuMovimiento="";
         movimientoRival="";
         turno = 1;
-        buttonsOn();
+        buttonsOn(won);
     }
     
     public void lose(){
+        boolean won = false;
         if(rol == 1){
         scorep2+=1;
         }else if(rol == 2){
@@ -237,7 +290,7 @@ public class FXMLDocumentController implements Initializable {
         tuMovimiento="";
         movimientoRival="";
         turno = 1;
-        buttonsOn();
+        buttonsOn(won);
     }
     
     public void empate(){
@@ -249,7 +302,7 @@ public class FXMLDocumentController implements Initializable {
         tuMovimiento="";
         movimientoRival="";
         turno = 1;
-        buttonsOn();
+        buttonsOn(false);
     }
     
     public void addMSG(String mensaje){

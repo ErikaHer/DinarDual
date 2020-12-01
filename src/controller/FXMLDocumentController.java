@@ -71,7 +71,7 @@ public class FXMLDocumentController implements Initializable {
     private ImageView image_3;
 
     private ImageView clickedImageView;
-    private boolean[] usedImages;
+    private boolean[][] usedImages;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -79,9 +79,11 @@ public class FXMLDocumentController implements Initializable {
         values = new String[10];
         imageView = new ImageView[3];
         roundValues = new int[3];
-        usedImages = new boolean[3];
-        for (int i = 0; i < usedImages.length; i++) {
-            usedImages[i] = false;
+        usedImages = new boolean[3][3];
+        for (int i = 0; i<3; i++) {
+            for(int j=0;j<3;j++){
+                usedImages[i][j] = false;
+            }
         }
 
         buttonsOff();
@@ -229,15 +231,15 @@ public class FXMLDocumentController implements Initializable {
 
         switch (currentImageView) {
             case "image_1":
-                usedImages[0] = true;
+                usedImages[0][0] = true;
                 break;
 
             case "image_2":
-                usedImages[1] = true;
+                usedImages[1][0] = true;
                 break;
 
             case "image_3":
-                usedImages[2] = true;
+                usedImages[2][0] = true;
                 break;
         }
         sendMSG(tuMovimiento);
@@ -250,34 +252,37 @@ public class FXMLDocumentController implements Initializable {
     }
 
     public void buttonsOn(boolean won) {
-        if (!usedImages[0]) {
+        if (!usedImages[0][0]) {
             image_1.setDisable(false);
-        } else {
+        } else if(!usedImages[0][1]) {
             if (won) {
                 image_1.setImage(new Image("/images/round_won.png"));
             } else {
                 image_1.setImage(new Image("/images/round_lost.png"));
             }
+            usedImages[0][1] = true;
         }
 
-        if (!usedImages[1]) {
+        if (!usedImages[1][0]) {
             image_2.setDisable(false);
-        } else {
+        } else if(!usedImages[1][1]) {
             if (won) {
                 image_2.setImage(new Image("/images/round_won.png"));
             } else {
                 image_2.setImage(new Image("/images/round_lost.png"));
             }
+            usedImages[1][1] = true;
         }
 
-        if (!usedImages[2]) {
+        if (!usedImages[2][0]) {
             image_3.setDisable(false);
-        } else {
+        } else if(!usedImages[2][1]) {
             if (won) {
                 image_3.setImage(new Image("/images/round_won.png"));
             } else {
                 image_3.setImage(new Image("/images/round_lost.png"));
             }
+            usedImages[2][1] = true;
         }
     }
 
@@ -286,12 +291,12 @@ public class FXMLDocumentController implements Initializable {
             int ownMove, rivalMove;
             ownMove = Integer.parseInt(tuMovimiento.split(" ")[0]);
             rivalMove = Integer.parseInt(movimientoRival.split(" ")[0]);
-
             if (ownMove > rivalMove) {
                 win();
                 ciclos++;
                 System.out.println(ciclos);
                 guardarScore(ciclos);
+                
             } else if (ownMove < rivalMove) {
                 lose();
                 ciclos++;

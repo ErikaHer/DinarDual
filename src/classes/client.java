@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -42,7 +43,7 @@ public class client extends Thread{
         }
     }
     
-    public void crearFlujos(){
+    public void crearFlujos() throws ParseException{
         try {
             InputStream is = socket.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
@@ -80,7 +81,7 @@ public class client extends Thread{
         return "";
     }
     
-    public void iniciar(){
+    public void iniciar() throws ParseException{
         boolean serverComplete = false;
         String msg = recibirMensaje();
         while(!serverComplete){
@@ -105,7 +106,11 @@ public class client extends Thread{
 
                             @Override
                             public void run() {
-                                controller.addMSG(mensaje);
+                                try {
+                                    controller.addMSG(mensaje);
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         });
         }

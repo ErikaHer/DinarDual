@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -105,7 +106,11 @@ public class server extends Thread{
             Platform.runLater(new Runnable() {
 
                             public void run() {
-                                controller.addMSG(mensaje);
+                                try {
+                                    controller.addMSG(mensaje);
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(server.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         });
         }

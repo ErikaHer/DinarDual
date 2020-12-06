@@ -14,11 +14,11 @@ import java.util.*;
  */
 public class PostgresCon {
 
-    private final static String url = "jdbc:mysql://localhost:3306/DinarDuel";
-    private final static String user = "root";
-    private final static String password = "";
-    private static final String querySelect = "SELECT username1,score1,username2,score2,date FROM Scoreboard;";
-    private static final String queryInsert = "INSERT INTO Scoreboard"
+    private final static String url = "jdbc:postgresql://192.168.1.73/DinarDuel";
+    private final static String user = "postgres";
+    private final static String password = "1234";
+    private static final String querySelect = "SELECT username1,score1,username2,score2,date FROM public.\"Scoreboard\";";
+    private static final String queryInsert = "INSERT INTO public.\"Scoreboard\""
             + " (username1, score1, username2, score2, date) VALUES" + " (?, ?, ?, ?, ?);";
     private int i = 0;
     private int size;
@@ -39,7 +39,7 @@ public class PostgresCon {
                     String date = resultSet.getString("date");
                     ScoreBoard data = new ScoreBoard(username1, score1, username2, score2, date);
                     scr.add(data);
-                    System.out.println("ScoreBoard |" + i + "|: " + "/" + username1 + "/" + score1 + "/" + username2 + "/" + score2 + "/" + date + "/");
+                    //System.out.println("ScoreBoard |" + i + "|: " + "/" + username1 + "/" + score1 + "/" + username2 + "/" + score2 + "/" + date + "/");
                     i++;
                 }
             } else {

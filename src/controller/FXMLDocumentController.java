@@ -19,15 +19,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -94,25 +100,58 @@ public class FXMLDocumentController implements Initializable {
 
     public void guardarScore(int num) throws ParseException {
         if (num == 3) {
-            Alert a = new Alert(AlertType.NONE);
-            Date date = new Date();
-            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            String year = Integer.toString(localDate.getYear());
-            String month = Integer.toString(localDate.getMonthValue());
-            String day = Integer.toString(localDate.getDayOfMonth());
-            String fecha = day+"/"+month+"/"+year+"/";
+            String fecha = generarFecha();
             PostgresCon conn = new PostgresCon();
             conn.setScoreboard("Player1", "Player2", scorep1, scorep2, fecha);
             ArrayList<ScoreBoard> board = conn.getScoreboard();
-            System.out.println("Termino");
-            a.setAlertType(AlertType.INFORMATION);
-            // set content text
-            for (ScoreBoard board1 : board) {
-                a.setContentText(board1.getUser1() + "|" + board1.getScore1() + "|" + board1.getUser2() + "|" + board1.getScore2() + "|" + board1.getDate() + "\n");
-            }
-            // show the dialog 
-            a.show();
+            mostrarBoard(board, AlertType.INFORMATION);
         }
+    }
+
+    public void mostrarBoard( ArrayList<ScoreBoard> scores , AlertType alertType) {
+        ObservableList<ScoreBoard> terminal = FXCollections.observableArrayList(scores);
+        TableView table = new TableView();
+        TableColumn col1 = new TableColumn("username1");
+        col1.setCellValueFactory(
+                new PropertyValueFactory<ScoreBoard, String>("user1"));
+        TableColumn col2 = new TableColumn("score1");
+        col2.setCellValueFactory(
+                new PropertyValueFactory<ScoreBoard, String>("score1"));
+        TableColumn col3 = new TableColumn("username2");
+        col3.setCellValueFactory(
+                new PropertyValueFactory<ScoreBoard, String>("user2"));
+        TableColumn col4 = new TableColumn("score2");
+        col4.setCellValueFactory(
+                new PropertyValueFactory<ScoreBoard, String>("score2"));
+        TableColumn col5 = new TableColumn("date");
+        col5.setCellValueFactory(
+                new PropertyValueFactory<ScoreBoard, String>("date"));
+        scores.forEach((score) -> {
+            System.out.println("Score: "+score.getUser1()+"|"+score.getScore1()+"|"+score.getUser2()+"|"+score.getScore2()+"|"+score.getDate());
+        });
+        table.getItems().removeAll();
+        table.getItems().setAll(terminal);
+        table.getColumns().setAll(col1,col2,col3,col4,col5);
+        System.out.println(table.getItems().toString());
+        
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(null);
+        alert.setTitle("ScoreBoard");
+        alert.getDialogPane().setContent(table);
+        alert.getDialogPane().getContent().setStyle("-fx-background-color: transparent;");
+        alert.setResizable(true);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.showAndWait();
+    }
+
+    public String generarFecha(){
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        String year = Integer.toString(localDate.getYear());
+        String month = Integer.toString(localDate.getMonthValue());
+        String day = Integer.toString(localDate.getDayOfMonth());
+        String fecha = day+"/"+month+"/"+year+"/";
+        return fecha;
     }
 
     public void runClient() throws ParseException {

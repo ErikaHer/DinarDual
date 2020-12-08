@@ -8,8 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="RPSGame.jar" size="530123" download="eager" />
-    <jar href="lib\postgresql-42.2.18.jar" size="1004719" download="eager" />
+    <jar href="RPSGame.jar" size="530607" download="eager" />
+    <jar href="lib\postgresql-42.2.6.jar" size="842825" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="RPSGame" >
     <param name="requiredFXVersion" value="8.0+"/>

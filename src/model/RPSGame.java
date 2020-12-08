@@ -23,6 +23,7 @@ public class RPSGame extends Application {
         Scene scene = new Scene(root);
         stage.setResizable(false);
         stage.setScene(scene);
+        stage.setTitle("DinarDuel");
         stage.show();
     }
 

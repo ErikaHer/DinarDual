@@ -33,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 
 /**
@@ -75,6 +76,9 @@ public class FXMLDocumentController implements Initializable {
     private ImageView image_2;
     @FXML
     private ImageView image_3;
+    
+    @FXML
+    private Text description;
 
     private ImageView clickedImageView;
     private boolean[][] usedImages;
@@ -157,10 +161,11 @@ public class FXMLDocumentController implements Initializable {
     public void runClient() throws ParseException {
         buttonsOn(false);
         rol = 2;
-        score1.setText("score jugador 1:");
-        score2.setText("score jugador 2:");
+        score1.setText("Score jugador 1: ");
+        score2.setText("Score jugador 2: ");
         player1.setDisable(true);
         player2.setDisable(true);
+        description.setVisible(false);
         cl.conectarConElServidor();
         label.setText("Eres el Jugador 2");
         cl.crearFlujos();
@@ -172,10 +177,11 @@ public class FXMLDocumentController implements Initializable {
         buttonsOn(false);
         rol = 1;
         turno = 1;
-        score1.setText("score jugador 1:");
-        score2.setText("score jugador 2:");
+        score1.setText("Score jugador 1: ");
+        score2.setText("Score jugador 2: ");
         player1.setDisable(true);
         player2.setDisable(true);
+        description.setVisible(false);
         sv.abrirPuerto();
         sv.esperarAlCliente();
         label.setText("Eres el jugador 1");
@@ -356,8 +362,8 @@ public class FXMLDocumentController implements Initializable {
         } else if (rol == 2) {
             scorep2 += 1;
         }
-        score1.setText("score jugador 1: " + scorep1);
-        score2.setText("score jugador 2: " + scorep2);
+        score1.setText("Score jugador 1: " + scorep1);
+        score2.setText("Score jugador 2: " + scorep2);
         tuMovimiento = "";
         movimientoRival = "";
         turno = 1;
@@ -371,9 +377,9 @@ public class FXMLDocumentController implements Initializable {
         } else if (rol == 2) {
             scorep1 += 1;
         }
-        aviso.setText("Perdiste :c El rival eligió " + movimientoRival);
-        score1.setText("score jugador 1: " + scorep1);
-        score2.setText("score jugador 2: " + scorep2);
+        aviso.setText("Perdiste, el rival eligió " + movimientoRival);
+        score1.setText("Score jugador 1: " + scorep1);
+        score2.setText("Score jugador 2: " + scorep2);
         tuMovimiento = "";
         movimientoRival = "";
         turno = 1;
@@ -384,8 +390,8 @@ public class FXMLDocumentController implements Initializable {
         aviso.setText("¡Empate! El rival tambien eligió " + movimientoRival);
         scorep1++;
         scorep2++;
-        score1.setText("score jugador 1: " + scorep1);
-        score2.setText("score jugador 2: " + scorep2);
+        score1.setText("Score jugador 1: " + scorep1);
+        score2.setText("Score jugador 2: " + scorep2);
         tuMovimiento = "";
         movimientoRival = "";
         turno = 1;
